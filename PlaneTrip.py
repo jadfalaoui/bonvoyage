@@ -1,4 +1,3 @@
-
 import google.generativeai as genai
 import requests
 import base64
@@ -11,11 +10,11 @@ headers = {
 
 inputBaseLocation = "Chicago"
 inputDepartureDate = "2024-06-15"
-inputFinalDestination = "Madrid"
+inputFinalDestination = "London"
 inputReturnDate = "2024-06-26"
 
 inputAdultsGoing = 1
-inputCabinClassInt = 1
+inputCabinClassInt = 4
 inputCabinClass = ""
 
 if inputCabinClassInt == 1:
@@ -26,7 +25,6 @@ if inputCabinClassInt == 3:
 	inputCabinClass = "business"
 if inputCabinClassInt == 4:
 	inputCabinClass = "first"
-print(inputCabinClass)
 
 
 #url for API 
@@ -56,25 +54,21 @@ responseForTrip = requests.get(urlForRoundTrip, headers=headers, params=querystr
 roundTrip = responseForTrip.json()
 json_stringRoundTrip = json.dumps(roundTrip)
 data1 = json.loads(json_stringRoundTrip)
-roundTripToken = data1['data']['token']
-print(roundTripToken)
-print(data1['data']['itineraries'])
-roundTripSessionId = data1['data']['itineraries'][0]['price']['formatted']
-print(roundTripSessionId)
+#roundTripToken = data1['data']['token']
+#print(roundTripToken)
+#print(data1['data']['itineraries'])
+roundTripCost = data1['data']['itineraries'][0]['price']['formatted']
+print(roundTripCost)
+roundTripCarrierName = data1['data']['filterStats']['carriers'][0]['name']
+print(roundTripCarrierName)
 
+roundTripChangeFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isChangeAllowed']
+roundTripPartialChangeFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isPartiallyChangeable']
+roundTripCancelFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isCancellationAllowed']
+roundTripPartialRefundFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isPartiallyRefundable']
 
+roundTripOriginAirport = data1['data']['itineraries'][0]['legs'][0]['origin']['name']
+roundTripDestinationAirport = data1['data']['itineraries'][0]['legs'][0]['destination']['name']
 
-
-
-
-
-#Price generator
-#querystring = {"fromId":baseLocation,"toId":destinationLocation,"departDate":inputDepartureDate,"returnDate":inputReturnDate,"currency":"USD","market":"US","locale":"en-US"}
-#response = requests.get(urlForPriceCalender, headers=headers, params=querystring)
-#print(response.json())
-
-
-
-
-
-
+flightTravel = [roundTripCarrierName, roundTripCost, roundTripOriginAirport, roundTripDestinationAirport, roundTripChangeFlightAllowed, roundTripPartialChangeFlightAllowed, roundTripCancelFlightAllowed, roundTripPartialRefundFlightAllowed]
+print(flightTravel)

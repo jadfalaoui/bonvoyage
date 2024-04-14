@@ -9,7 +9,7 @@
       "dest": "vercel_entry.py"
     }],
     "env": {
-      "DATABASE_URL": "@database_url"
+      
     },
     "build": {
       "env": {

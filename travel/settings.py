@@ -58,7 +58,7 @@ ROOT_URLCONF = 'travel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'travel/templates')],
+        'DIRS': [BASE_DIR / 'travel' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -7,6 +7,8 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 import google.generativeai as genai
 from django.http import JsonResponse
+import requests
+import base64
 from django.http import HttpResponse
 from django.template import Context, Template
 import os
@@ -24,6 +26,66 @@ model = genai.GenerativeModel(
         temperature=0.9,
     ))
 
+def flightAPI(departure,destination,start,end,cabinClass):
+    headers = {
+        "X-RapidAPI-Key": "1ca56e208cmsha9767e988aa61d6p1d0d39jsn2c3ea1ffe3fd",
+        "X-RapidAPI-Host": "skyscanner80.p.rapidapi.com"
+    }
+
+    inputBaseLocation = departure
+    inputDepartureDate = start
+    inputFinalDestination = destination
+    inputReturnDate = end
+
+    inputAdultsGoing = 1
+    inputCabinClassInt = 4
+    inputCabinClass = ""
+
+    if cabinClass == "Economy":
+        inputCabinClass = "economy"
+    if cabinClass == "Premium Economy":
+        inputCabinClass = "premium_economy"
+    if cabinClass == "Business":
+        inputCabinClass = "business"
+    if cabinClass == "First":
+        inputCabinClass = "first"
+
+
+    #url for API 
+    urlFlightAutoComplete = "https://skyscanner80.p.rapidapi.com/api/v1/flights/auto-complete"
+    urlForRoundTrip = "https://skyscanner80.p.rapidapi.com/api/v1/flights/search-roundtrip"
+    urlForPriceCalender = "https://skyscanner80.p.rapidapi.com/api/v1/flights/price-calendar"
+
+    #base location ID generator
+    querystringAutoTrip = {"query":inputBaseLocation,"market":"US","locale":"en-US"}
+    responsePlaneAutoComplete = requests.get(urlFlightAutoComplete, headers=headers, params=querystringAutoTrip)
+    planeAutoComplete = responsePlaneAutoComplete.json()
+    json_stringPlaneAutoComplete = json.dumps(planeAutoComplete)
+    data1 = json.loads(json_stringPlaneAutoComplete)
+    baseLocation = data1['data'][0]['id']
+
+    #destination location ID generator 
+    querystringAutoTrip = {"query":inputFinalDestination,"market":"US","locale":"en-US"}
+    responsePlaneAutoComplete = requests.get(urlFlightAutoComplete, headers=headers, params=querystringAutoTrip)
+    planeAutoComplete = responsePlaneAutoComplete.json()
+    json_stringPlaneAutoComplete = json.dumps(planeAutoComplete)
+    data1 = json.loads(json_stringPlaneAutoComplete)
+    destinationLocation = data1['data'][0]['id']
+
+    #round Trip
+    querystringForTrip = {"fromId":baseLocation,"toId":destinationLocation,"departDate":inputDepartureDate,"returnDate":inputReturnDate,"adults":inputAdultsGoing,"cabinClass":inputCabinClass,"currency":"USD","market":"US","locale":"en-US"}
+    responseForTrip = requests.get(urlForRoundTrip, headers=headers, params=querystringForTrip)
+    roundTrip = responseForTrip.json()
+    json_stringRoundTrip = json.dumps(roundTrip)
+    data1 = json.loads(json_stringRoundTrip)
+
+    roundTripCost = data1['data']['itineraries'][0]['price']['formatted']
+    roundTripCarrierName = data1['data']['filterStats']['carriers'][0]['name']
+
+    roundTripDestinationAirport = data1['data']['itineraries'][0]['legs'][0]['destination']['name']
+
+    flightTravel = {'carrier':roundTripCarrierName, 'cost':roundTripCost, 'departure':roundTripOriginAirport, 'destination':roundTripDestinationAirport}
+    return flightTravel
 
 def numDays(date1,date2):
     date1 = datetime.strptime(date1, '%Y-%m-%d')
@@ -290,7 +352,9 @@ class AIAPIView(APIView):
     def post(self, request, *args, **kwargs):
         input_data = request.data
         print("Received data:", input_data)  # It's good to log the received data for debugging.
-        result = blackbox(input_data)
+        result={'plan': blackbox(input_data),
+                'flight': flightAPI(input_data["deparature"],input_data["destination"],input_data["start"],input_data["end"],input_data["flight"])
+        } 
         return JsonResponse(result, safe=False)
     
 

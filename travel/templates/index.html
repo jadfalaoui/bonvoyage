@@ -129,7 +129,7 @@
                             </button>
                             <input type="text" id="quantity-input2"
                                 class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="1" value="1"required />
+                                placeholder="1" value="1" required />
                             <button type="button" id="increment-button2"
                                 class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                 <svg class="w-3 h-3 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +279,8 @@
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <a href="#" onclick="selectDropdownItem4(event, 'super relaxed')"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super Relaxed</a>
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super
+                                    Relaxed</a>
                             </li>
                             <li>
                                 <a href="#" onclick="selectDropdownItem4(event, 'relaxing')"
@@ -295,13 +296,15 @@
                             </li>
                             <li>
                                 <a href="#" onclick="selectDropdownItem4(event, 'super active')"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super Active</a>
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super
+                                    Active</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <input type="hidden" id="dropdownValue4">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">, and looking for it
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">, and looking for
+                    it
                 </span>
                 <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> to be
                 </span>
@@ -334,9 +337,10 @@
                     </div>
                 </div>
                 <input type="hidden" id="dropdownValue5">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> intellectually speaking
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> intellectually
+                    speaking
                 </span>
-                
+
             </div>
 
             <div class="flex flex-wrap items-center mb-4 gap-5 text-xl pt-10 pb-20" style=" font-family: Roboto Mono; font-weight:
@@ -358,6 +362,8 @@
     </section>
 
     <section class="min-h-screen flex flex-wrap items-center justify-center mb-4 text-xl bg-gray-100">
+        <div id="flights-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
+        style="font-family: Roboto Mono; font-weight: 350"></div>
         <div id="travel-plan-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
             style="font-family: Roboto Mono; font-weight: 350">
             <h1>your travel plan is loading...</h1>
@@ -551,7 +557,7 @@
                     var container = $('#travel-plan-output');
                     container.empty(); // Clear previous results
 
-                    response.forEach(function (day) {
+                    response.plan.forEach(function (day) {
                         var dayMarkup = `
                 <div class="p-6 bg-white rounded-lg shadow mb-5">
                     <h2 class="mb-3 text-2xl font-bold">${day.Day}</h2>
@@ -576,6 +582,21 @@
                 </div>`;
                         container.append(dayMarkup);
                     });
+
+                    let flightsContainer = $('#flights-output');
+                    flightsContainer.empty(); // Clear previous content
+
+                    let flightsMarkup = `
+                    <div class="bg-white rounded-lg shadow p-6 mb-5">
+                        <h2 class="text-2xl font-bold mb-3">Flight Details</h2>
+                        <p><strong>Airline:</strong> ${response.flight.carrier}</p>
+                        <p><strong>Price:</strong> ${response.flight.cost}</p>
+                        <p><strong>Departure:</strong> ${response.flight.departure}</p>
+                    </div>`;
+
+                    flightsContainer.append(flightsMarkup);
+
+
                 },
                 error: function () {
                     container.html('<p>Failed to load data. Please try again.</p>');

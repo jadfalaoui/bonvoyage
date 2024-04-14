@@ -12,7 +12,7 @@ import base64
 from django.http import HttpResponse
 from django.template import Context, Template
 import os
-
+import json 
 # Create your views here.
 
 GOOGLE_API_KEY= "AIzaSyAoaSv_0V1dxXfkdorC10rKbH3R5i68Fmw"
@@ -25,6 +25,50 @@ model = genai.GenerativeModel(
         max_output_tokens=10000,
         temperature=0.9,
     ))
+def hotelAPI(destination,start,end):
+    urlForAutoComplete = "https://skyscanner80.p.rapidapi.com/api/v1/hotels/auto-complete"
+    urlForHotelPrices = "https://skyscanner80.p.rapidapi.com/api/v1/hotels/prices"
+    urlForSearch = "https://skyscanner80.p.rapidapi.com/api/v1/hotels/search"
+
+
+    destinationLocation = destination
+    checkInDate = start
+    checkOutDate = end
+    roomNumber = 1
+    adultsComing = 1
+    priceTotal = "PRICE_TOTAL"
+    starsWantedForHotel = 4
+
+    headers = {
+        "X-RapidAPI-Key": "fa3ebe3994mshf4255cceae92845p1c034ajsn1048793cb092",
+        "X-RapidAPI-Host": "skyscanner80.p.rapidapi.com"
+    }
+
+    #For Auotcomplete
+    querystringForAutoComplete = {"query":destinationLocation,"market":"US","locale":"en-US"}
+    stringForAutoComplete = requests.get(urlForAutoComplete, headers=headers, params=querystringForAutoComplete)
+    forAutoComplete = stringForAutoComplete.json()
+    json_stringForAutoComplete = json.dumps(forAutoComplete)
+    data1 = json.loads(json_stringForAutoComplete)
+    baseLocationEntityId = data1['data'][0]['entityId']
+
+    #For Search
+    querystringForHotelSearch = {"entityId":baseLocationEntityId,"checkin":checkInDate,"checkout": checkOutDate,"rooms":roomNumber,"adults":adultsComing,"resultsPerPage":"1","page":"1","priceType":"PRICE_TOTAL","sorting":"-stars","stars":starsWantedForHotel,"currency":"USD","market":"US","locale":"en-US"}
+    stringForHotelSearch = requests.get(urlForSearch, headers=headers, params=querystringForHotelSearch)
+    forHotelSearch = stringForHotelSearch.json()
+    json_stringForHotelSearch = json.dumps(forHotelSearch)
+    data1 = json.loads(json_stringForHotelSearch)
+    hotelName = data1['data']['results']['hotelCards'][0]['name']
+
+    #ForRelativeDistance
+    hotelRelativeDistance = data1['data']['results']['hotelCards'][0]['distance']
+
+    #For Price
+    hotelPrice = data1['data']['results']['hotelCards'][0]['lowestPrice']['price']
+
+    hotelInformation = {'name':hotelName, 'cost':hotelPrice, 'distance':hotelRelativeDistance}
+
+    return hotelInformation
 
 def flightAPI(departure,destination,start,end,cabinClass):
     headers = {
@@ -78,10 +122,17 @@ def flightAPI(departure,destination,start,end,cabinClass):
     roundTrip = responseForTrip.json()
     json_stringRoundTrip = json.dumps(roundTrip)
     data1 = json.loads(json_stringRoundTrip)
-
     roundTripCost = data1['data']['itineraries'][0]['price']['formatted']
     roundTripCarrierName = data1['data']['filterStats']['carriers'][0]['name']
+    
+    roundTripChangeFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isChangeAllowed']
+    roundTripPartialChangeFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isPartiallyChangeable']
+    roundTripCancelFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isCancellationAllowed']
+    roundTripPartialRefundFlightAllowed = data1['data']['itineraries'][0]['farePolicy']['isPartiallyRefundable']
 
+    
+
+    roundTripOriginAirport = data1['data']['itineraries'][0]['legs'][0]['origin']['name']
     roundTripDestinationAirport = data1['data']['itineraries'][0]['legs'][0]['destination']['name']
 
     flightTravel = {'carrier':roundTripCarrierName, 'cost':roundTripCost, 'departure':roundTripOriginAirport, 'destination':roundTripDestinationAirport}
@@ -353,7 +404,8 @@ class AIAPIView(APIView):
         input_data = request.data
         print("Received data:", input_data)  # It's good to log the received data for debugging.
         result={'plan': blackbox(input_data),
-                'flight': flightAPI(input_data["departure"],input_data["destination"],input_data["start"],input_data["end"],input_data["flight"])
+                'flight': flightAPI(input_data["departure"],input_data["destination"],input_data["start"],input_data["end"],input_data["flight"]),
+                'hotel': hotelAPI(input_data["destination"],input_data["start"],input_data["end"])
         } 
         return JsonResponse(result, safe=False)
     

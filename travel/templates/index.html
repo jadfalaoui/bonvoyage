@@ -26,9 +26,8 @@
         <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
             <h1
                 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-                voyage</h1>
-            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">get a
-                travel plan catered to your group, preferences, and budget.</p>
+                bon voyage</h1>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">personalized travel planning made easy. get a bespoke itinerary that fits your group's preferences and budget, so you can enjoy the journey without the hassle.</p>
             <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
                 <button
                     class=" flex flex col justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md text-white font-350 py-2 px-4 rounded"
@@ -364,6 +363,8 @@
     <section class="min-h-screen flex flex-wrap items-center justify-center mb-4 text-xl bg-gray-100">
         <div id="flights-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
         style="font-family: Roboto Mono; font-weight: 350"></div>
+        <div id="hotels-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
+        style="font-family: Roboto Mono; font-weight: 350"></div>
         <div id="travel-plan-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
             style="font-family: Roboto Mono; font-weight: 350">
             <h1>your travel plan is loading...</h1>
@@ -588,13 +589,28 @@
 
                     let flightsMarkup = `
                     <div class="bg-white rounded-lg shadow p-6 mb-5">
-                        <h2 class="text-2xl font-bold mb-3">Flight Details</h2>
-                        <p><strong>Airline:</strong> ${response.flight.carrier}</p>
-                        <p><strong>Price:</strong> ${response.flight.cost}</p>
-                        <p><strong>Departure:</strong> ${response.flight.departure}</p>
+                        <h2 class="text-2xl font-bold mb-3">flight details</h2>
+                        <p><strong>airline:</strong> ${response.flight.carrier}</p>
+                        <p><strong>price:</strong> ${response.flight.cost}</p>
+                        <p><strong>departure:</strong> ${response.flight.departure}</p>
+                        <p><strong>arrival:</strong> ${response.flight.arrival}</p>
                     </div>`;
 
                     flightsContainer.append(flightsMarkup);
+
+                    let hotelsContainer = $('#hotels-output');
+                    hotelsContainer.empty(); // Clear previous content
+
+                    let hotelsMarkup = `
+                    <div class="bg-white rounded-lg shadow p-6 mb-5">
+                        <h2 class="text-2xl font-bold mb-3">hotel details</h2>
+                        <p><strong>name:</strong> ${response.hotel.name}</p>
+                        <p><strong>price:</strong> ${response.hotel.cost}</p>
+                        <p><strong>distance:</strong> ${response.hotel.distance}</p>
+                    </div>`;
+
+                    flightsContainer.append(hotelsMarkup);
+
 
 
                 },

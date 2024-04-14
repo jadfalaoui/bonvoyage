@@ -2,8 +2,7 @@
     "version": 2,
     "builds": [{
       "src": "vercel_entry.py",
-      "use": "@ardnt/vercel-python-wsgi",
-        "config": { "maxLambdaSize": "15mb" }
+      "use": "@vercel/python"
     }],
     "routes": [{
       "src": "/(.*)",

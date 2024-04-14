@@ -381,7 +381,7 @@ def locChoices(data):
     return formatted_list
 
 def index(request):
-    template_path = '/var/task/travel/templates/index.html'
+    template_path = '/Users/jad/Library/CloudStorage/OneDrive-Personal/programming-local/python/google-mhacks/travel/templates/index.html'
     
     # Read the template from the given path
     with open(template_path, 'r') as file:

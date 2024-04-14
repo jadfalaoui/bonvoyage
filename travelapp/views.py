@@ -1,13 +1,15 @@
 from django.shortcuts import render
-import pathlib
-import textwrap
+from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 import google.generativeai as genai
-
-from IPython.display import display
-from IPython.display import Markdown
+from django.http import JsonResponse
+from django.http import HttpResponse
+from django.template import Context, Template
+import os
 
 # Create your views here.
 
@@ -15,42 +17,83 @@ GOOGLE_API_KEY= "AIzaSyAoaSv_0V1dxXfkdorC10rKbH3R5i68Fmw"
 
 genai.configure(api_key=GOOGLE_API_KEY)
 
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel(
+    'gemini-pro',
+    generation_config=genai.GenerationConfig(
+        max_output_tokens=10000,
+        temperature=0.9,
+    ))
+
+
+def numDays(date1,date2):
+    date1 = datetime.strptime(date1, '%Y-%m-%d')
+    date2 = datetime.strptime(date2, '%Y-%m-%d')
+
+    delta = date2 - date1
+    numberDays = delta.days
+    return numberDays
+
+def parse_activities(input_list):
+    days = []
+    current_day = None
+    current_time = None
+    count = 1
+    for item in input_list:
+        stripped_item = item.strip()
+
+        if 'Day' in stripped_item:
+            if current_day is not None:
+                days.append(current_day)
+            
+            current_day = {"Day": "day "+str(count), "Morning": [], "Noon": [], "Night": []}
+            count = count+1
+        elif 'Morning:' in stripped_item or 'Noon:' in stripped_item or 'Night:' in stripped_item:
+            current_time = stripped_item.strip(':')
+        elif current_day is not None and current_time is not None:
+            current_day[current_time].append(stripped_item)
+
+    if current_day is not None:
+        days.append(current_day)
+
+    return days
+
+
 def blackbox(data):
-    location = data["city"]
+    location = data["destination"]
+    departure = data["departure"]
+    start = data["start"]
+    end = data["end"]
     groupType = data["groupType"]
-    spunk = data["spunk"] #should be integer
-    numberDays = 5 #HARDCODED WE NEED TO CHANGE
-    age = "20" #HARDCODED WE NEED TO CHANGE
-    numPeople = "5" #HARDCODED WE NEED TO CHANGE
-    additionalCom = "Skydiving!" #HARDCODED WE NEED TO CHANGE
-    expense = data["expense"]
-    if spunk == 5:
-        active = "Super Active"
-    elif spunk == 4:
-        active = "Active"
-    elif spunk == 3:
-        active = "Fun"
-    elif spunk == 2:
-        active = "Relaxing"
-    else:
-        active = "Super Relaxed"
-    if expense == 5:
+    active = data["activityRange"]
+    numberDays = numDays(start,end) 
+    age = data["age"] 
+    numPeople = data["groupSize"]
+    additionalCom = data["comments"] 
+    expense = data["activities"]
+    
+
+
+    
+    if expense == "expensive":
         budget = 1000 * numberDays
-    elif expense == 4:
-        budget = 150 * numberDays
-    elif expense == 3:
-        budget = 100 * numberDays
-    elif expense == 2:
+    elif expense == "decently priced":
+        budget = 200 * numberDays
+    elif expense == "inexpensive":
         budget = 50 * numberDays
-    else:
-        budget = 20* numberDays
+
+    
 
     response = model.generate_content(
-        'Imagine you were a tour guide that is an expert at planning ' + active + ' trips. ' +
+    'Imagine you were a tour guide that is an expert at planning ' + active + ' trips. ' +
         'Search highly rated activities in the area and give a specific itenerary for a traveler that is ' + age + 
         ' years old and wants to go to ' + location + ' with ' + budget + 'dollars per person with ' + numPeople + 
-        ' people, all of whom are their' + groupType + ' and for ' + str(numberDays) + ' days. The budget will be given per person for the entire trip. If the budget for the trip is high, find expensive places for the travelers to visit, and if the budget is low, find cheaper places for them to visit. For example, if given an 100 dollar budget and a 5 day trip (so $20 dollars per day because 100/5=20), output casual dining options like "Breakfast at Kagurazaka Cafe $5 (Savor a traditional Japanese breakfast in a quaint cafe)" and cheap activities like "Visit the Labadi Beach $3 per person (Unwind and swim in the refreshing Atlantic Ocean)". Additional comments are: '+ additionalCom + '. A trip that is "Super Active" should include a wide range of very engaging activities such as hiking and swimming, while a trip that is more "Relaxing" should consist of chilling at the beach and watching shows/movies. A trip that is "Fun" should consists of a combinations of the two. Each day should be split into 3 different sections: Morning, Noon, and Night. Each section must include a meal **MANDATORY (breakfast for monring, lunch for noon, dinner for evening).\n\n' + 
+        ' people, all of whom are their' + groupType + ' and for ' + str(numberDays) + ' days. The budget will be given per person for the entire trip. ' +
+        'If the budget for the trip is high, find expensive places for the travelers to visit, and if the budget is low, find cheaper places for them to ' +
+        'visit. For example, if given an 100 dollar budget and a 5 day trip (so $20 dollars per day because 100/5=20), output casual dining options like "Breakfast ' +
+        'at Kagurazaka Cafe $5 (Savor a traditional Japanese breakfast in a quaint cafe)" and cheap activities like "Visit the Labadi Beach $3 per person (Unwind and ' + 
+        'swim in the refreshing Atlantic Ocean)". Additional comments are: '+ additionalCom + '. A trip that is "Super Active" should include a wide range of very engaging ' + 
+        'activities such as hiking and swimming, while a trip that is more "Relaxing" should consist of chilling at the beach and watching shows/movies. A trip that is "Fun" '+ 
+        'should consists of a combinations of the two. Each day should be split into 3 different sections: Morning, Noon, and Night. Each section must include a meal **MANDATORY (breakfast for monring, lunch for noon, dinner for evening).\n\n' + 
         'Give it in this EXACT (DO NOT CHANGE THE FORMAT OR INCLUDE ANY STARS OR ASTERICKS Do not output **Day 6:**\n**Morning:** and instead output Day6:\nMoning:\n Do not include any punctuation except for colons, parentheses, and dollar signs): ' +
         'If given the location: Puerto Rico, age: 25, budget: 800, number of days: 10, activity: Fun, accompanied by: Friends and number of people: 10, output exactly for the consecutive days 6 and 7:'
         'Day 6:\nMorning:\nBreakfast at Abracadabra Coffee Roasters $10-20 (Artisanal coffee and specialty breakfast sandwiches)\nVisit the Castillo San Felipe del Morro $15-30 (Explore the historic Spanish fort)\nNoon:\nLunch at El Alambique $15-30 (Traditional Puerto Rican cuisine with a cozy atmosphere)' +
@@ -227,56 +270,17 @@ def blackbox(data):
 
         Notice that there are no stars in the response. This is very important to do!
         '''
-        'Use up the majority of the budget. Activities should be specific locations and should not be vague. For example, do not output "Go stargazing $20-30" and instead state the location "Go stargazing at the Puerto Rico Observatory $20-30. Keep all monetary values in dollars (Dont output Breakfast at Kagurazaka Cafe 730yen and instead output Breakfast at Kagurazaka Cafe $5). Activities should also contain a short discription of the activity (For example, dont just output Lunch at Summer House Santa Monica $30-$50 and instead, output Lunch at Summer House Santa Monica $30-$50 (California fare & wines, plus homemade breads, served in a breezy, beach house-inspired space.))'
-        # generation_config = genai.GenerationConfig(stop_sequences=['\n6'])
+        'Use up the majority of the budget. Activities should be specific locations and should not be vague. For example, do not output "Go stargazing $20-30" and instead state the location "Go stargazing at the Puerto Rico Observatory $20-30." ' +
+        'Keep all monetary values in dollars (Dont output Breakfast at Kagurazaka Cafe 730yen and instead output Breakfast at Kagurazaka Cafe $5). Activities should also contain a short discription of the activity (For example, dont just output Lunch ' + 
+        'at Summer House Santa Monica $30-$50 and instead, output Lunch at Summer House Santa Monica $30-$50 (California fare & wines, plus homemade breads, served in a breezy, beach house-inspired space.))'
+
     )
     responseText = response.text
     responseText = responseText.replace("\n\n", "\n").replace("**", "").strip()
-    # Split the itinerary by "Day" to separate each day's activities
-    #days = responseText.split("Day")[1:]  # Skip the first split result, which is empty
-    #for i in range(len(days)):
-    #    if days[i][0] == " ":
-    #        days[i]  = [sub[1 : ] for sub in days[i]]
+    parsed = parse_activities(responseText.split("\n"))
+    return parsed
 
-    # Prepare the 3D array
-    #days_array = []
 
-    # Iterate over each day's content
-    lines = responseText.split('\n')
-        
-        # Initialize variables to hold the parsed data
-    days = []
-    current_day = {}
-    current_time_of_day = None
-
-    for line in lines:
-        # Check if the line starts a new day
-        if line.startswith('Day'):
-            # If there's a current day being processed, add it to the list of days
-            if current_day:
-                days.append(current_day)
-            current_day = {'Morning': [], 'Noon': [], 'Night': []}
-        
-        # Check if the line indicates time of day
-        elif line.strip() in ['Morning:', 'Noon:', 'Night:']:
-            current_time_of_day = line.strip()[:-1]
-        
-        # Otherwise, it should be an activity
-        elif line.strip():
-            # Add the activity to the correct time of day within the current day
-            activity = line.strip()
-            if current_time_of_day:
-                current_day[current_time_of_day].append(activity)
-
-    # Add the last day if the loop ends
-    if current_day:
-        days.append(current_day)
-        
-    return days
-
-def index(request):
-    context = {}
-    return render(request,'index.html')
 
 def locChoices(data):
     #"Please give me a concise description of the vacation you'd like to go on (in 1 sentence): "
@@ -310,15 +314,28 @@ def locChoices(data):
 
     return formatted_list
 
+def index(request):
+    template_path = '/var/task/travel/templates/index.html'
+    
+    # Read the template from the given path
+    with open(template_path, 'r') as file:
+        template_content = file.read()
+
+    # Create a Template object
+    template = Template(template_content)
+    
+    # Context for rendering
+    context = {}
+    
+    # Render the template with the context
+    html = template.render(Context(context))
+    
+    return HttpResponse(html)
+
+
 class AIAPIView(APIView):
     def post(self, request, *args, **kwargs):
         input_data = request.data
-        print(input_data)
-
-        locList = locChoices(input_data)
-        print(locList)
-        #Return formatted list of blackbox data
+        print("Received data:", input_data)  # It's good to log the received data for debugging.
         result = blackbox(input_data)
-
-        return Response(result, status=status.HTTP_200_OK)
-    
+        return JsonResponse(result, safe=False)

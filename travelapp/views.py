@@ -3,6 +3,8 @@ from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 import google.generativeai as genai
 from django.http import JsonResponse
 
@@ -263,8 +265,9 @@ def locChoices(data):
     return formatted_list
 
 def index(request):
-    context = {}
-    return render(request,'index.html')
+    context = {} 
+    html = render_to_string('index.html', context, request=request)
+    return HttpResponse(html)
 
 
 class AIAPIView(APIView):

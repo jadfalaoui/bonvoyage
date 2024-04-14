@@ -4,27 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Page with Tailwind CSS</title>
+    <title>travel assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.0/dist/tailwind.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.3.0/flowbite.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            scroll-behavior: smooth;
+        }
+    </style>
 
 </head>
 
 <body class="bg-gray-100 text-gray-900 font-sans leading-normal tracking-normal">
 
-    <section class="h-screen flex flex-col justify-center items-center bg-blue-500 gap-5">
-        <h1 class="text-6xl font-bold text-white text-center">travel</h1>
+    <section class="h-screen flex flex-col justify-center items-center bg-whites pt-10">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
+            <h1
+                class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+                voyage</h1>
+            <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">get a
+                travel plan catered to your group, preferences, and budget.</p>
+            <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
+                <button
+                    class=" flex flex col justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md text-white font-350 py-2 px-4 rounded"
+                    id="next-button1">get started <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M1 5h12m0 0L9 1m4 4L9 9" />
+                    </svg></button>
+
+
+            </div>
+        </div>
     </section>
-    <section class="h-screen flex flex-wrap items-center mb-4 text-xl bg-white">
+    <section class="h-screen flex flex-wrap items-center mb-4 text-xl bg-gray-200">
+        <div class="flex flex-col w-3/4 mx-auto gap-10 " style="font-family: Roboto Mono; font-weight: 350">
+
+            <div class="mb-6">
+                <label for="departure" class="block mb-2 text-sm font-medium text-gray-900">where are you
+                    coming from?</label>
+                <input type="text" id="departure"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="city or airport">
+            </div>
+            <div class="mb-6">
+                <label for="destination" class="block mb-2 text-sm font-medium text-gray-900">where are you
+                    going?</label>
+                <input type="text" id="destination"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="city or airport">
+            </div>
+
+            <div class="mb-6 flex gap-4">
+                <div class="flex-1">
+                    <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900">start date</label>
+                    <input type="date" id="startDate"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <div class="flex-1">
+                    <label for="end_date" class="block mb-2 text-sm font-medium text-gray-900">end date</label>
+                    <input type="date" id="endDate"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+            </div>
+            <button
+                class=" bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md text-white font-350 py-2 px-4 rounded"
+                id="next-button2">continue</button>
+
+
+        </div>
+        <!-- Section with the date picker and the place you're coming from-->
+    </section>
+    <section class="min-h-screen flex flex-wrap items-center text-xl bg-white">
         <div class="flex flex-col w-3/4 mx-auto gap-10 ">
-            <div class="flex flex-wrap items-center mb-4 gap-3">
+            <div class="flex flex-wrap items-center pt-10 pb-30 gap-3">
                 <span class="relative inline-block text-1.5xl"
-                    style="font-family: Roboto Mono; font-weight: bold">I'm</span>
-                <div class="relative inline-block max-w-xs mx-auto">
-                    <form class="quantity-selector">
+                    style="font-family: Roboto Mono; font-weight: 350">I'm</span>
+                <div class="relative inline-block">
+                    <form class="quantity-selector" style="font-family: Roboto Mono; font-weight: 350">
                         <div class="relative flex items-center max-w-[8rem]">
                             <button type="button" id="decrement-button1"
                                 class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
@@ -36,7 +98,7 @@
                             </button>
                             <input type="text" id="quantity-input1"
                                 class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="18" required />
+                                placeholder="18" value="18" required />
                             <button type="button" id="increment-button1"
                                 class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                 <svg class="w-3 h-3 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg"
@@ -48,12 +110,14 @@
                         </div>
                     </form>
                 </div>
-                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: bold">years
+                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: 350">years
                     old,
                     planning
+                </span>
+                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: 350">
                     to travel with a group of </span>
-                <div class="relative inline-block max-w-xs mx-auto">
-                    <form class="quantity-selector">
+                <div class="relative inline-block">
+                    <form class="quantity-selector" style="font-family: Roboto Mono; font-weight: 350">
                         <div class="relative flex items-center max-w-[8rem]">
                             <button type="button" id="decrement-button2"
                                 class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
@@ -65,7 +129,7 @@
                             </button>
                             <input type="text" id="quantity-input2"
                                 class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="1" required />
+                                placeholder="1" value="1"required />
                             <button type="button" id="increment-button2"
                                 class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                                 <svg class="w-3 h-3 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg"
@@ -77,23 +141,25 @@
                         </div>
                     </form>
                 </div>
-                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: bold">
-                    people, that I
+                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: 350">
+                    people, that I </span>
+                <span class="relative inline-block text-1.5xl" style="font-family: Roboto Mono; font-weight: 350">
                     consider my </span>
-                <input type="text" id="groupType"
-                    class="relative inline-block bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="relationship" required />
-                <span class="relative inline-block text-1.5xl"
-                    style="font-family: Roboto Mono; font-weight: bold">.</span>
-            </div>
+                <div>
+                    <input type="text" id="groupType" style="font-family: Roboto Mono; font-weight: 350"
+                        class="relative inline-block bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="relationship" required />
+                    <span class="relative inline-block text-1.5xl"
+                        style="font-family: Roboto Mono; font-weight: 350">.</span>
+                </div>
 
-            <div class="flex flex-wrap items-center mb-4 gap-5 text-xl">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: bold">We like to fly
+
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">We like to fly
                     in </span>
-                <div class="relative inline-block">
+                <div class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">
                     <button id="dropdownButton1" onclick="toggleDropdown()"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        type="button">Select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
+                        type="button">select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 4 4 4-4" />
@@ -101,7 +167,7 @@
                     </button>
                     <div id="dropdownMenu1"
                         class="absolute hidden bg-white divide-y divide-gray-100 rounded shadow w-44 mt-1 dark:bg-gray-700"
-                        style="left:0; right:0;"> <!-- Use absolute positioning -->
+                        style="left:0; right:0; z-index:1;"> <!-- Use absolute positioning -->
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <a href="#" onclick="selectDropdownItem(event, 'Economy')"
@@ -124,12 +190,13 @@
                     </div>
                 </div>
                 <input type="hidden" id="dropdownValue1">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: bold">, like to stay
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">,</span>
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> like to stay
                     in </span>
-                <div class="relative inline-block">
+                <div class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">
                     <button id="dropdownButton2" onclick="toggleDropdown2()"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        type="button">Select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
+                        type="button">select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 4 4 4-4" />
@@ -137,7 +204,7 @@
                     </button>
                     <div id="dropdownMenu2"
                         class="absolute hidden bg-white divide-y divide-gray-100 rounded shadow w-44 mt-1 dark:bg-gray-700"
-                        style="left:0; right:0;"> <!-- Use absolute positioning -->
+                        style="left:0; right:0; z-index:1;"> <!-- Use absolute positioning -->
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <a href="#" onclick="selectDropdownItem2(event, 'decent')"
@@ -159,12 +226,12 @@
                     </div>
                 </div>
                 <input type="hidden" id="dropdownValue2">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: bold"> hotels and
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> hotels and
                     usually prefer </span>
-                <div class="relative inline-block">
+                <div class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">
                     <button id="dropdownButton3" onclick="toggleDropdown3()"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        type="button">Select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
+                        type="button">select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 4 4 4-4" />
@@ -172,7 +239,7 @@
                     </button>
                     <div id="dropdownMenu3"
                         class="absolute hidden bg-white divide-y divide-gray-100 rounded shadow w-44 mt-1 dark:bg-gray-700"
-                        style="left:0; right:0;"> <!-- Use absolute positioning -->
+                        style="left:0; right:0; z-index:1;"> <!-- Use absolute positioning -->
                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                             <li>
                                 <a href="#" onclick="selectDropdownItem3(event, 'inexpensive')"
@@ -191,35 +258,128 @@
                     </div>
                 </div>
                 <input type="hidden" id="dropdownValue3">
-                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: bold"> activities.
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> activities.
                 </span>
-
-            </div>
-
-            <div class="flex flex-row items-center mb-4 gap-5 text-xl">
-
-                <div class="flex flex-wrap items-center mb-4 gap-5 text-xl">
-                    <label for="steps-range1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Level</label>
-                    <input id="steps-range1" type="range" min="0" max="5" value="3" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
-                    <span id="range-display1" class="text-gray-900 dark:text-white">3</span> <!-- Display for first slider value -->
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> I'm looking for
+                </span>
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> the trip to be
+                </span>
+                <div class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">
+                    <button id="dropdownButton4" onclick="toggleDropdown4()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button">select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 4 4 4-4" />
+                        </svg>
+                    </button>
+                    <div id="dropdownMenu4"
+                        class="absolute hidden bg-white divide-y divide-gray-100 rounded shadow w-44 mt-1 dark:bg-gray-700"
+                        style="left:0; right:0; z-index:1;"> <!-- Use absolute positioning -->
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                            <li>
+                                <a href="#" onclick="selectDropdownItem4(event, 'super relaxed')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super Relaxed</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem4(event, 'relaxing')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Relaxing</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem4(event, 'fun')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Fun</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem4(event, 'active')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Active</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem4(event, 'super active')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Super Active</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+                <input type="hidden" id="dropdownValue4">
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">, and looking for it
+                </span>
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> to be
+                </span>
+                <div class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350">
+                    <button id="dropdownButton5" onclick="toggleDropdown5()"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button">select <svg class="w-2.5 h-2.5 ml-2" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 4 4 4-4" />
+                        </svg>
+                    </button>
+                    <div id="dropdownMenu5"
+                        class="absolute hidden bg-white divide-y divide-gray-100 rounded shadow w-44 mt-1 dark:bg-gray-700"
+                        style="left:0; right:0; z-index:1;"> <!-- Use absolute positioning -->
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                            <li>
+                                <a href="#" onclick="selectDropdownItem5(event, 'light')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Light</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem5(event, 'moderate')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Moderate</a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="selectDropdownItem5(event, 'heavy')"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Heavy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <input type="hidden" id="dropdownValue5">
+                <span class="relative inline-block" style="font-family: Roboto Mono; font-weight: 350"> intellectually speaking
+                </span>
                 
-                <div class="flex flex-wrap items-center mb-4 gap-5 text-xl">
-                    <label for="steps-range2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Intellectual Breadth</label>
-                    <input id="steps-range2" type="range" min="0" max="10" value="3" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
-                    <span id="range-display2" class="text-gray-900 dark:text-white">5</span> <!-- Display for second slider value -->
-                </div>
-
             </div>
-            <div class="justify-center items-center">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="callAI()">Call AI API</button>
+
+            <div class="flex flex-wrap items-center mb-4 gap-5 text-xl pt-10 pb-20" style=" font-family: Roboto Mono; font-weight:
+                350">
+                <label for="coments" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">additional
+                    comments</label>
+                <textarea id="comments" rows="4"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="write your special requests here..."></textarea>
+            </div>
+
+            <div class="flex justify-center items-center pb-10" style="font-family: Roboto Mono; font-weight: 350">
+                <button
+                    class=" bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md text-white font-350 py-2 px-4 rounded"
+                    id="next-button3" onclick="callAI()">continue</button>
             </div>
         </div>
-        
+
     </section>
-    
-    <div id="result"></div>>
+
+    <section class="min-h-screen flex flex-wrap items-center justify-center mb-4 text-xl bg-gray-100">
+        <div id="travel-plan-output" class="flex flex-col w-3/4 pt-20 mx-auto gap-10 "
+            style="font-family: Roboto Mono; font-weight: 350">
+            <h1>your travel plan is loading...</h1>
+            {% for day in days %}
+            <div class="bg-white p-5 rounded-lg shadow mb-5">
+                <h2 class="font-bold text-lg mb-3">{{ day.Day }}</h2>
+                {% for time, activities in day.items %}
+                {% if time != 'Day' %}
+                <div>
+                    <h3 class="font-semibold text-md">{{ time }}</h3>
+                    {% for activity in activities %}
+                    <p class="text-gray-600">{{ activity }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
     </section>
+
+
 
 
     <script>
@@ -242,6 +402,28 @@
             });
 
             $('#range-display2').text($('#steps-range2').val());
+
+            const sections = document.querySelectorAll('section');
+            let currentSectionIndex = 0; // Start at the first section
+
+            // Function to move to the next section
+            function moveToNextSection() {
+                if (currentSectionIndex < sections.length - 1) {
+                    sections[currentSectionIndex].style.display = 'none'; // Hide current section
+                    currentSectionIndex++; // Increment to next section
+                    sections[currentSectionIndex].style.display = 'flex'; // Show next section
+                }
+            }
+
+            // Attach event listener to your next button
+            document.getElementById('next-button1').addEventListener('click', moveToNextSection);
+            document.getElementById('next-button2').addEventListener('click', moveToNextSection);
+            document.getElementById('next-button3').addEventListener('click', moveToNextSection);
+
+            // Initially set up sections visibility
+            sections.forEach((section, index) => {
+                if (index !== 0) section.style.display = 'none'; // Hide all sections except the first
+            });
         });
 
 
@@ -311,6 +493,17 @@
             dropdown.classList.toggle("hidden");
         }
 
+        function toggleDropdown4() {
+            var dropdown = document.getElementById("dropdownMenu4");
+            dropdown.classList.toggle("hidden");
+        }
+
+        function toggleDropdown5() {
+            var dropdown = document.getElementById("dropdownMenu5");
+            dropdown.classList.toggle("hidden");
+        }
+
+
         function selectDropdownItem3(event, value) {
             event.preventDefault();
             document.getElementById("dropdownButton3").textContent = value;
@@ -318,16 +511,35 @@
             document.getElementById("dropdownMenu3").classList.add("hidden");
         }
 
+        function selectDropdownItem4(event, value) {
+            event.preventDefault();
+            document.getElementById("dropdownButton4").textContent = value;
+            document.getElementById("dropdownValue4").value = value;
+            document.getElementById("dropdownMenu4").classList.add("hidden");
+        }
+
+        function selectDropdownItem5(event, value) {
+            event.preventDefault();
+            document.getElementById("dropdownButton5").textContent = value;
+            document.getElementById("dropdownValue5").value = value;
+            document.getElementById("dropdownMenu5").classList.add("hidden");
+        }
+
         function callAI() {
             var data = {
+                departure: $('#departure').val(),
+                destination: $('#destination').val(),
+                start: $('#startDate').val(),
+                end: $('#endDate').val(),
                 age: $('#quantity-input1').val(),
                 groupSize: $('#quantity-input2').val(),
                 groupType: $('#groupType').val(),
                 flight: $('#dropdownValue1').val(),
-                hotel: $('#dropdownValue2').val(),     
-                activities: $('#dropdownValue3').val(),         
-                activityRange: $('#steps-range1').val(),
-                intellectualRange: $('#steps-range2').val(),
+                hotel: $('#dropdownValue2').val(),
+                activities: $('#dropdownValue3').val(),
+                activityRange: $('#dropdownValue4').val(),
+                intellectualRange: $('#dropdownValue5').val(),
+                comments: $('#comments').val(),
             };
             $.ajax({
                 url: '/api/call/',
@@ -336,20 +548,44 @@
                 data: JSON.stringify(data),
                 dataType: 'json',
                 success: function (response) {
-                    $('#result').html('Result: ' + response);
+                    var container = $('#travel-plan-output');
+                    container.empty(); // Clear previous results
+
+                    response.forEach(function (day) {
+                        var dayMarkup = `
+                <div class="p-6 bg-white rounded-lg shadow mb-5">
+                    <h2 class="mb-3 text-2xl font-bold">${day.Day}</h2>
+                    <div class="space-y-4">`;
+
+                        Object.entries(day).forEach(([time, activities]) => {
+                            if (time !== 'Day') {
+                                dayMarkup += `
+                        <div class="border p-4 rounded-lg">
+                            <h3 class="mb-2 text-xl font-semibold">${time.toLowerCase()}</h3>
+                            <ul>`;
+                                activities.forEach(function (activity) {
+                                    dayMarkup += `<li class="text-gray-600">${activity}</li>`;
+                                });
+                                dayMarkup += `</ul>
+                        </div>`;
+                            }
+                        });
+
+                        dayMarkup += `
+                    </div>
+                </div>`;
+                        container.append(dayMarkup);
+                    });
                 },
                 error: function () {
-                    $('#result').html('Error calling AI API');
+                    container.html('<p>Failed to load data. Please try again.</p>');
                 }
             });
         }
     </script>
 
 
-    </section>
-    <footer class="bg-gray-800 text-white text-center p-4">
-        <p class="text-white text-sm">© 2024 Simple Tailwind CSS Page</p>
-    </footer>
+
 
 </body>
 

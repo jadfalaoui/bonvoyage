@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from datetime import datetime
 import pathlib
 import textwrap
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import google.generativeai as genai
+from django.http import JsonResponse
 
 from IPython.display import display
 from IPython.display import Markdown
@@ -22,19 +24,71 @@ model = genai.GenerativeModel(
         temperature=0.9,
     ))
 
+
+def numDays(date1,date2):
+    date1 = datetime.strptime(date1, '%Y-%m-%d')
+    date2 = datetime.strptime(date2, '%Y-%m-%d')
+
+    delta = date2 - date1
+    numberDays = delta.days
+    return numberDays
+
+def parse_activities(input_list):
+    days = []
+    current_day = None
+    current_time = None
+    count = 1
+    for item in input_list:
+        stripped_item = item.strip()
+
+        if 'Day' in stripped_item:
+            if current_day is not None:
+                days.append(current_day)
+            
+            current_day = {"Day": "day "+str(count), "Morning": [], "Noon": [], "Night": []}
+            count = count+1
+        elif 'Morning:' in stripped_item or 'Noon:' in stripped_item or 'Night:' in stripped_item:
+            current_time = stripped_item.strip(':')
+        elif current_day is not None and current_time is not None:
+            current_day[current_time].append(stripped_item)
+
+    if current_day is not None:
+        days.append(current_day)
+
+    return days
+
+
 def blackbox(data):
-   location = "Orlando, Florida" #str(input("Location?\n"))
-    age = data["age"]
-    budget = "500"#str(input("Budget? (Per person)\n"))
-    accompanied = data["groupSize"]
-    numberDays = "6"#str(input("Number of days?\n"))
-    activity = "Exciting"#str(input("How active would you like to be?\n"))
-    numPeople = data["groupSize"]#str(input("Number of people?\n"))
-    additionalCom = "Want to go skydiving"#str(input("Additional comments?\n"))
-    response = model.generate_content('Imagine you were a tour guide that is an expert at planning ' + activity + ' active trips. ' +'Search highly rated activities in the area and give a specific itenerary for a traveler that is ' + age + 
-    ' years old and wants to go to ' + location + ' with ' + budget + 'dollars per person with ' + numPeople + 
-    ' people, all of whom are their' + accompanied + ' and for ' + numberDays + ' days. Additional comments are: '+ additionalCom + '. Each day should be split into 3 different sections: Morning, Noon, and Night. Each section must include a meal **MANDATORY (breakfast for monring, lunch for noon, dinner for evening).\n\n' + 
-    'Give it in this EXACT (DO NOT CHANGE THE FORMAT OR INCLUDE ANY STARS OR ASTERICKS Do not output **Day 6:**\n**Morning:** and instead output Day6:\nMoning:\n Do not include any punctuation except for colons, parentheses, and dollar signs): ' +
+    location = data["destination"]
+    departure = data["departure"]
+    start = data["start"]
+    end = data["end"]
+    groupType = data["groupType"]
+    active = data["activityRange"]
+    numberDays = numDays(start,end) 
+    age = data["age"] 
+    numPeople = data["groupSize"]
+    additionalCom = data["comments"] 
+    expense = data["activities"]
+    
+
+
+    
+    if expense == "expensive":
+        budget = 1000 * numberDays
+    elif expense == "decently priced":
+        budget = 200 * numberDays
+    elif expense == "inexpensive":
+        budget = 50 * numberDays
+
+    
+
+    response = model.generate_content(
+    'Imagine you were a tour guide that is an expert at planning ' + active + ' trips. ' +
+    'Search highly rated activities in the area and give a specific itenerary for a traveler that is ' + age + 
+    ' years old and wants to go to ' + location + ' with ' + str(budget) + 'dollars per person with ' + numPeople + 
+    ' people, all of whom are their' + groupType + ' and for ' + str(numberDays) + ' days. Additional comments are: '+ additionalCom + '. A trip that is "Super Active" should include a wide range of very engaging activities such as hiking and swimming, while a trip that is more "Relaxing" should consist of chilling at the beach and watching shows/movies. A trip that is "Fun" should consists of a combinations of the two. Each day should be split into 3 different sections: Morning, Noon, and Night. Each section must include a meal **MANDATORY (breakfast for monring, lunch for noon, dinner for evening).\n\n' + 
+    'Give it in this EXACT (DO NOT CHANGE THE FORMAT OR INCLUDE ANY STARS OR ASTERICKS UNDER ANY CIRCUMSTANCES, DO NOT DECORATE THE TIMES OF DAY WITH SYMBOLS EITHER Do not output **Day 6:**\n**Morning:** and instead output Day6:\nMorning:\n Do not include any punctuation except for colons, parentheses, and dollar signs): ' +
     'For example, if given the input of location: Spain, age: 15, budget: 1500, number of days: 5, activity: Spunky, accompanied by: family and number of people: 5 with no additional comments, output exactly for Day 1: "Day 1:\nMorning:\nBreakfast at Chocolatería San Ginés $10-20 (Traditional Spanish breakfast spot with churros and chocolate)\nVisit the Royal Palace of Madrid ' +
     '(Explore the grandeur of the Spanish monarchy)\nNoon:\nLunch at Botín $15-30 (Worlds oldest restaurant, serving traditional Spanish cuisine)\nWalk through El Retiro Park (Relax and explore the beautiful gardens)\nNight:\n' +
     'Attend a Flamenco show at Tablao Cordobes $40-60 (Experience the vibrant and passionate dance form)\nDinner at Casa Lucio $30-50 (Michelin-starred restaurant known for its traditional Spanish dishes)\n" If given the input Africa, age: 15, budget: 1500, number of days: 5, activity: Spunky, accompanied by: Friends and number of people: 5, output exactly for Day 5' +
@@ -113,7 +167,7 @@ def blackbox(data):
     Night:
     Attend a karaoke session $20 (Sing your heart out in a private karaoke room)
     Dinner at Ichiran $15 (Savor authentic tonkotsu ramen in a unique setting)\n\n'''
-    '''If given the input location: Orlando, Florida, age: 20, budget: 500, number of days: 6, activity: Exciting, and number of people: 5 with the additional comment "Want to go skydiving", output:
+    '''If given the input location: Orlando, Florida, age: 20, budget: 500, number of days: 6, activity: Exciting, accompanied by: coworkers and number of people: 5 with the additional comment "Want to go skydiving", output:
     Day 1:
     Morning:
     Breakfast at Keke's Breakfast Cafe: $10-15 (Indulge in classic American breakfast dishes)
@@ -174,29 +228,57 @@ def blackbox(data):
     Attend a stand-up comedy show at The Improv: $20-30 (Renowned comedy club with regular performances)
     Dinner at Rocco's Tacos: $15-25 (Vibrant Mexican restaurant with authentic flavors)
     '''
-    'Use up the majority of the budget. Activities should be specific locations and should not be vague. For example, do not output "Go stargazing $20-30" and instead state the location "Go stargazing at the Puerto Rico Observatory $20-30. Keep all monetary values in dollars (Dont output Breakfast at Kagurazaka Cafe 730yen and instead output Breakfast at Kagurazaka Cafe $5)')
-return response.text
+    'Use up the majority of the budget. Activities should be specific locations and should not be vague. For example, do not output "Go stargazing $20-30" and instead state the location "Go stargazing at the Puerto Rico Observatory $20-30. Keep all monetary values in dollars (Dont output Breakfast at Kagurazaka Cafe 730yen and instead output Breakfast at Kagurazaka Cafe $5). Activities should also contain a short discription of the activity (For example, dont just output Lunch at Summer House Santa Monica $30-$50 and instead, output Lunch at Summer House Santa Monica $30-$50 (California fare & wines, plus homemade breads, served in a breezy, beach house-inspired space.))'
+    )
+    parsed = parse_activities(response.text.split("\n"))
+    return parsed
+
+
+
+def locChoices(data):
+    #"Please give me a concise description of the vacation you'd like to go on (in 1 sentence): "
+    vacDescr = "asian famous cities" #data["vacDescr"]
+
+    locSuggestion = model.generate_content("I'd like to go on a vacation that best fits this description: " + vacDescr + ".\n" +
+    "Please provide 5 cities (with their country) that would best fit this description, along with a brief description in of around " +
+    "5 to 12 words that best describes the theme of the trip. Make the themes vary within reason between the 5 options. Also try and vary " + 
+    "how expensive the 5 locations are (so that not all 5 places are super expensive nor super cheap) unless specified otherwise by the description.\n" + 
+    "For each pair of location and theme, please exactly use the following format: " +  
+    "\"<City>, <Country>.<Theme>\"\n" + 
+    "When formatting, please follow these rules exactly:\n" +
+    "1. For each pair of location and theme, only use the period character exactly once: once at the end of the location part, " + 
+    "separating the location from the theme. Never use a period elsewhere, even if it is correct to do so. For example, instead of " + 
+    "outputting: \"Washington D.C.\", please output \"Washington DC\" instead.\n" + 
+    "2. For each pair of location and theme, please do not insert a space after the splitting period. There must be only one period following " +
+    "the country that splits the location and theme sections, and there must not be a space after the period.\n" + 
+    "3. Please use a new line after every pair of location and theme.\n")
+
+    response = locSuggestion.text
+    sentences = response.split("\n")
+
+    if sentences[len(sentences) - 1] == "":
+        sentences.pop()
+
+    # Split each string at the period and then flatten the list
+    split_list = [item for s in sentences for item in s.split('.', 1)]
+
+    # Correcting the format to ensure periods remain with the first part of each split
+    formatted_list = [item + '.' if not item.endswith('.') else item for item in split_list]
+
+    return formatted_list
 
 def index(request):
     context = {}
     return render(request,'index.html')
 
+
 class AIAPIView(APIView):
     def post(self, request, *args, **kwargs):
         input_data = request.data
-        print(input_data)
+        print("Received data:", input_data)  # It's good to log the received data for debugging.
         result = blackbox(input_data)
-        return Response(result, status=status.HTTP_200_OK)
+        return JsonResponse(result, safe=False)
     
 
 
 
-
-
-
-responseText = response.text
-endText = responseText.split('\n')
-
-
-
-print(endText)

@@ -8,9 +8,6 @@ from rest_framework import status
 import google.generativeai as genai
 from django.http import JsonResponse
 
-from IPython.display import display
-from IPython.display import Markdown
-
 # Create your views here.
 
 GOOGLE_API_KEY= "AIzaSyAoaSv_0V1dxXfkdorC10rKbH3R5i68Fmw"

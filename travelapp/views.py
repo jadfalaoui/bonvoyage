@@ -353,7 +353,7 @@ class AIAPIView(APIView):
         input_data = request.data
         print("Received data:", input_data)  # It's good to log the received data for debugging.
         result={'plan': blackbox(input_data),
-                'flight': flightAPI(input_data["deparature"],input_data["destination"],input_data["start"],input_data["end"],input_data["flight"])
+                'flight': flightAPI(input_data["departure"],input_data["destination"],input_data["start"],input_data["end"],input_data["flight"])
         } 
         return JsonResponse(result, safe=False)
     

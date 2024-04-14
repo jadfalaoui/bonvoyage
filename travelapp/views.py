@@ -7,6 +7,9 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 import google.generativeai as genai
 from django.http import JsonResponse
+from django.http import HttpResponse
+from django.template import Context, Template
+import os
 
 # Create your views here.
 
@@ -265,8 +268,21 @@ def locChoices(data):
     return formatted_list
 
 def index(request):
-    context = {} 
-    html = render_to_string('index.html', context, request=request)
+    template_path = '/var/task/travel/templates/index.html'
+    
+    # Read the template from the given path
+    with open(template_path, 'r') as file:
+        template_content = file.read()
+
+    # Create a Template object
+    template = Template(template_content)
+    
+    # Context for rendering
+    context = {}
+    
+    # Render the template with the context
+    html = template.render(Context(context))
+    
     return HttpResponse(html)
 
 

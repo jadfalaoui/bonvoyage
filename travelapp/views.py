@@ -13,7 +13,7 @@ import os
 
 # Create your views here.
 
-GOOGLE_API_KEY= "AIzaSyAoaSv_0V1dxXfkdorC10rKbH3R5i68Fmw"
+GOOGLE_API_KEY= "AIzaSyCOfXxlWuA_wLacLz4fHXQWuW3Zi5ZDW0M"
 
 genai.configure(api_key=GOOGLE_API_KEY)
 

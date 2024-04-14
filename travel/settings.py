@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-ALLOWED_HOSTS = ['google-mhacks.vercel.app','google-mhacks-o6sse0093-jadfalaouis-projects.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 
 MIDDLEWARE = [

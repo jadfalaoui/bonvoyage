@@ -4,7 +4,7 @@
 Our group was inspired by a shared interest in travel and technology. We aimed to create a comprehensive tool that eases the travel planning process by providing automated suggestions for flights, hotels, and activities based on user preferences, all brought together through a seamless interface.
 
 ### What We Learned
-This project was a tremendous learning opportunity for each member of our team. We gained deeper insights into Django's capabilities, RESTful API development, and the integration of external APIs for dynamic content retrieval. Collaboratively, we explored Google's generative AI technology, enhancing our understanding of machine learning applications in real-world scenarios.
+This project was a tremendous learning opportunity for each member of our team. We gained deeper insights into Django's capabilities, RESTful API development, and the integration of external APIs for dynamic content retrieval. Collaboratively, we explored Google's generative AI technology which enhanced our understanding of machine learning applications in real-world scenarios.
 
 ### How We Built It
 Our project is built on Django, utilizing its powerful features to serve RESTful endpoints that interact with a dynamic frontend. Key steps in our process included:
